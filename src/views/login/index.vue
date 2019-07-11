@@ -1,9 +1,15 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">系统登录</h3>
       </div>
 
       <el-form-item prop="username">
@@ -13,7 +19,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -21,7 +27,7 @@
         />
       </el-form-item>
 
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+      <el-tooltip v-model="capsTooltip" content="Caps Lock 已打开" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -31,7 +37,7 @@
             ref="password"
             v-model="loginForm.password"
             :type="passwordType"
-            placeholder="Password"
+            placeholder="密码"
             name="password"
             tabindex="2"
             autocomplete="on"
@@ -45,7 +51,12 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLogin"
+      >登录</el-button>
 
       <div style="position:relative">
         <div class="tips">
@@ -57,17 +68,12 @@
           <span>Password : any</span>
         </div>
 
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          Or connect with
-        </el-button>
+        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">Or connect with</el-button>
       </div>
     </el-form>
 
     <el-dialog title="Or connect with" :visible.sync="showDialog">
       Can not be simulated on local, so please combine you own business simulation! ! !
-      <br>
-      <br>
-      <br>
       <social-sign />
     </el-dialog>
   </div>
@@ -83,14 +89,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入正确的用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码不能少于6位'))
       } else {
         callback()
       }
@@ -101,8 +107,12 @@ export default {
         password: '111111'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [
+          { required: true, trigger: 'blur', validator: validateUsername }
+        ],
+        password: [
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -140,7 +150,10 @@ export default {
   methods: {
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
-        if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
+        if (
+          (shiftKey && (key >= 'a' && key <= 'z')) ||
+          (!shiftKey && (key >= 'A' && key <= 'Z'))
+        ) {
           this.capsTooltip = true
         } else {
           this.capsTooltip = false
@@ -164,12 +177,18 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
+          this.$store
+            .dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              // 登录成功之后重定
+              this.$router.push({
+                path: this.redirect || '/',
+                query: this.otherQuery
+              })
               this.loading = false
             })
             .catch(() => {
+              // 登录失败
               this.loading = false
             })
         } else {
@@ -212,8 +231,8 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -256,9 +275,9 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;
